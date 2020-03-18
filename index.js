@@ -207,17 +207,13 @@ async function getAddEmployeeInfo() {
                 type: "list",
                 message: "What is the employee's role?",
                 name: "role",
-                choices: [
-                    ...roles
-                ]
+                choices: []
             },
             {
                 type: "list",
                 message: "Who is the employee's manager?",
                 name: "manager",
-                choices: [
-                    ...managers
-                ]
+                choices: []
             }
         ])
 }
@@ -229,9 +225,7 @@ async function getRemoveEmployeeInfo() {
             type: "list",
             message: "Which employee do you want to remove?",
             name: "employeeName",
-            choices: [
-                ...employees
-            ]
+            choices: []
         }])
 }
 
@@ -261,9 +255,7 @@ async function getRoleInfo() {
                 type: "list",
                 message: "Which department uses this role?",
                 name: "departmentName",
-                choices: [
-                    ...departments
-                ]
+                choices: []
             }
         ])
 }
@@ -276,17 +268,13 @@ async function getUpdateEmployeeRoleInfo() {
                 type: "list",
                 message: "Which employee do you want to update?",
                 name: "employeeName",
-                choices: [
-                    ...employees
-                ]
+                choices: []
             },
             {
                 type: "list",
                 message: "What is the employee's new role?",
                 name: "role",
-                choices: [
-                    ...roles
-                ]
+                choices: []
             }
         ])
 
@@ -302,7 +290,6 @@ async function main() {
                 {
                     const newDepartmentName = await getDepartmentInfo();
                     await addDepartment(newDepartmentName);
-                    break;
                 }
 
             case 'Add employee':
@@ -311,7 +298,6 @@ async function main() {
                     console.log("add an employee");
                     console.log(newEmployee);
                     await addEmployee(newEmployee);
-                    break;
                 }
 
             case 'Add role':
@@ -319,45 +305,38 @@ async function main() {
                     const newRole = await getRoleInfo();
                     console.log("add a role");
                     await addRole(newRole);
-                    break;
                 }
 
             case 'Remove employee':
                 {
                     const employee = await getRemoveEmployeeInfo();
                     await removeEmployee(employee);
-                    break;
                 }
 
             case 'Update employee role':
                 {
                     const employee = await getUpdateEmployeeRoleInfo();
                     await updateEmployeeRole(employee);
-                    break;
                 }
 
             case 'View all departments':
                 {
                     await viewAllDepartments();
-                    break;
                 }
 
             case 'View all employees':
                 {
                     await viewAllEmployees();
-                    break;
                 }
 
             case 'View all employees by department':
                 {
                     await viewAllEmployeesByDepartment();
-                    break;
                 }
 
             case 'View all roles':
                 {
                     await viewAllRoles();
-                    break;
                 }
 
             case 'Exit':
@@ -367,8 +346,6 @@ async function main() {
                     return;
                 }
 
-            default:
-                console.log(`Internal warning. Shouldn't get here. action was ${prompt.action}`);
         }
     }
 }
