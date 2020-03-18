@@ -4,27 +4,26 @@ CREATE DATABASE employeesDB;
 USE employeesDB;
 
 CREATE TABLE department(
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(30) NULL,
-  PRIMARY KEY (id)
+id INT AUTO_INCREMENT NOT NULL,
+name VARCHAR(30) NOT NULL,
+PRIMARY KEY (id)
 );
 
-CREATE TABLE role (
-  id INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(30) NOT NULL,
-  salary DECIMAL(10,2), 
-  department_id INT NOT NULL,
-  FOREIGN KEY (department_id) REFERENCES department(id)
+CREATE TABLE role(
+id INT AUTO_INCREMENT NOT NULL,
+title VARCHAR(30) NOT NULL,
+salary DECIMAL(10,2) NOT NULL,
+department_id INT NOT NULL,
+PRIMARY KEY (id)
 );
 
-CREATE TABLE employee (
-  id INT NOT NULL AUTO_INCREMENT,
-  first_name VARCHAR(30),
-  last_name VARCHAR(30),
-  role_id INT NOT NULL,
-  manager_id INT,
-  FOREIGN KEY (role_id) REFERENCES role(id),
-  FOREIGN KEY (manager_id) REFERENCES role(id)
+CREATE TABLE employee(
+id INT AUTO_INCREMENT NOT NULL,
+first_name VARCHAR(30) NOT NULL,
+last_name VARCHAR(30) NOT NULL,
+role_id INT NOT NULL,
+manager_id INT,
+PRIMARY KEY (id)
 );
 
 INSERT into department (name) VALUES ("Sales and Trading");
@@ -51,9 +50,9 @@ INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Jack", "Ja
 INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Peter", "Peters", 3, 2);
 INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("John", "Johnson", 4, NULL);
 
-INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Dan", "Daniel", NULL, 3);
+INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Dan", "Daniel", 5, 3);
 INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Chris", "Christian", 6, 3);
-INSERT mployee (first_name, last_name, role_id, manager_id) VALUES ("Richard", "Richards", 6, 3);
+INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Richard", "Richards", 6, 3);
 
 INSERT employee (first_name, last_name, role_id, manager_id) VALUES ("Jeffrey", "Jefferson", 7, 4);
 
