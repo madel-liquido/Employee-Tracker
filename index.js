@@ -1,19 +1,18 @@
 const inquirer = require("inquirer");
-const Database = require("./employeesDB");
-const cTable = require("console.table");
+let Database = require("./employeesDB");
+let cTable = require("console.table");
 
 const db = new Database({
     host: "localhost",
     port: 3306,
-    user: "nodeuser",
-    password: "nodeuser",
+    user: "root",
+    password: "",
     database: "employeesDB"
 });
 
 
 async function getManagerNames() {
-    const query = "SELECT * FROM employee WHERE manager_id IS NULL";
-
+    let query = "SELECT * FROM employee WHERE manager_id IS NULL";
     const rows = await db.query(query);
     let employeeNames = [];
     for (const employee of rows) {
@@ -25,19 +24,16 @@ async function getManagerNames() {
 async function getRoles() {
     let query = "SELECT title FROM role";
     const rows = await db.query(query);
-
     let roles = [];
     for (const row of rows) {
         roles.push(row.title);
     }
-
     return roles;
 }
 
 async function getDepartmentNames() {
     let query = "SELECT name FROM department";
     const rows = await db.query(query);
-
     let departments = [];
     for (const row of rows) {
         departments.push(row.name);
@@ -62,7 +58,6 @@ async function getRoleId(roleName) {
 
 async function getEmployeeId(fullName) {
     let employee = getFirstAndLastName(fullName);
-
     let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
     let args = [employee[0], employee[1]];
     const rows = await db.query(query, args);
@@ -71,7 +66,6 @@ async function getEmployeeId(fullName) {
 
 async function getEmployeeNames() {
     let query = "SELECT * FROM employee";
-
     const rows = await db.query(query);
     let employeeNames = [];
     for (const employee of rows) {
@@ -113,7 +107,6 @@ function getFirstAndLastName(fullName) {
     if (employee.length == 2) {
         return employee;
     }
-
     const last_name = employee[employee.length - 1];
     let first_name = " ";
     for (let i = 0; i < employee.length - 1; i++) {
@@ -135,7 +128,6 @@ async function updateEmployeeRole(employeeInfo) {
 async function addEmployee(employeeInfo) {
     let roleId = await getRoleId(employeeInfo.role);
     let managerId = await getEmployeeId(employeeInfo.manager);
-
     let query = "INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
     let args = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
     const rows = await db.query(query, args);
@@ -207,13 +199,17 @@ async function getAddEmployeeInfo() {
                 type: "list",
                 message: "What is the employee's role?",
                 name: "role",
-                choices: []
+                choices: [
+                    ...roles
+                ]
             },
             {
                 type: "list",
                 message: "Who is the employee's manager?",
                 name: "manager",
-                choices: []
+                choices: [
+                    ...managers
+                ]
             }
         ])
 }
@@ -225,7 +221,9 @@ async function getRemoveEmployeeInfo() {
             type: "list",
             message: "Which employee do you want to remove?",
             name: "employeeName",
-            choices: []
+            choices: [
+                ...employees
+            ]
         }])
 }
 
@@ -255,7 +253,9 @@ async function getRoleInfo() {
                 type: "list",
                 message: "Which department uses this role?",
                 name: "departmentName",
-                choices: []
+                choices: [
+                    ...departments
+                ]
             }
         ])
 }
@@ -268,13 +268,17 @@ async function getUpdateEmployeeRoleInfo() {
                 type: "list",
                 message: "Which employee do you want to update?",
                 name: "employeeName",
-                choices: []
+                choices: [
+                    ...employees
+                ]
             },
             {
                 type: "list",
                 message: "What is the employee's new role?",
                 name: "role",
-                choices: []
+                choices: [
+                    ...roles
+                ]
             }
         ])
 
@@ -290,6 +294,7 @@ async function main() {
                 {
                     const newDepartmentName = await getDepartmentInfo();
                     await addDepartment(newDepartmentName);
+                    break;
                 }
 
             case 'Add employee':
@@ -298,6 +303,7 @@ async function main() {
                     console.log("add an employee");
                     console.log(newEmployee);
                     await addEmployee(newEmployee);
+                    break;
                 }
 
             case 'Add role':
@@ -305,38 +311,45 @@ async function main() {
                     const newRole = await getRoleInfo();
                     console.log("add a role");
                     await addRole(newRole);
+                    break;
                 }
 
             case 'Remove employee':
                 {
                     const employee = await getRemoveEmployeeInfo();
                     await removeEmployee(employee);
+                    break;
                 }
 
             case 'Update employee role':
                 {
                     const employee = await getUpdateEmployeeRoleInfo();
                     await updateEmployeeRole(employee);
+                    break;
                 }
 
             case 'View all departments':
                 {
                     await viewAllDepartments();
+                    break;
                 }
 
             case 'View all employees':
                 {
                     await viewAllEmployees();
+                    break;
                 }
 
             case 'View all employees by department':
                 {
                     await viewAllEmployeesByDepartment();
+                    break;
                 }
 
             case 'View all roles':
                 {
                     await viewAllRoles();
+                    break;
                 }
 
             case 'Exit':
@@ -346,6 +359,8 @@ async function main() {
                     return;
                 }
 
+            default:
+                console.log(`Internal warning. Shouldn't get here. action was ${prompt.action}`);
         }
     }
 }
